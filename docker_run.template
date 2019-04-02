@@ -1,0 +1,9 @@
+#!/in/bash
+sudo docker run -it \
+-e CONSUMER_KEY='' \
+-e CONSUMER_SECRET='' \
+-e ACCESS_TOKEN='' \
+-e ACCESS_SECRET='' \
+-e HOST_MONGODB='mongodb://localhost/twitterdb' \
+-e SEARCH_TERMS="#dog #doggo #shibe #shib #cat #cat #catto #kitten #meme #memes" \
+twitter-bot
