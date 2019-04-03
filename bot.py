@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding:utf-8 -*-
 
 
 from time import sleep
@@ -55,6 +54,8 @@ def preparar_flujo():
     global api
 
     WORDS = [i for i in os.environ['SEARCH_TERMS'].split(" ")]
+    for WORD in WORDS:
+        WORD = WORD.encode('utf-8')
 
     print("Empezando a escuchar el flujillo...")
 
