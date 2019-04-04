@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+# -*- coding: utf-8 -*-
 
 from time import sleep
 from pymongo import MongoClient
@@ -30,6 +30,7 @@ class EscuchadorDeFlujos(tweepy.StreamListener):
             datos = json.loads(data)
             datos_str = repr(datos).encode('utf-8')
             fecha_creacion = datos['created_at']
+            print("Data dump:\n\t{}\n=============\n".format(datos_str))
             db.twitter_search.insert(datos)
         except Exception as e:
             print("Se ha pinyado con la excepcion: {}".format(e))
@@ -54,14 +55,23 @@ def preparar_flujo():
     global api
 
     WORDS = [i for i in os.environ['SEARCH_TERMS'].split(" ")]
+
+    msg = "Procesando las siguientes palabras:"
+
     for WORD in WORDS:
-        WORD = WORD.encode('utf-8')
+        msg += "\n\t{}".format(WORD)
+    print(msg)
 
     print("Empezando a escuchar el flujillo...")
 
     listener = EscuchadorDeFlujos(api=tweepy.API(wait_on_rate_limit=True))
     streamer = tweepy.Stream(auth=auth, listener=listener)
-    streamer.filter(track=WORDS)
+    lista_palabras = u''
+    for WORD in WORDS:
+        lista_palabras += "{},".format(WORD.encode('ascii', 'ignore'))
+
+    print(lista_palabras)
+    streamer.filter(track=lista_palabras)
 
     print("Acabe...")
 
@@ -83,11 +93,10 @@ def hola_twitter_read():
 
     public_tweets = api.home_timeline()
     for tweet in public_tweets:
-        value = tweet.text.encode('utf-8')
+        value = tweet.text  # .encode('utf-8')
         print(str(value))
 
 
 if __name__ == "__main__":
     cargar_credenciales()
     preparar_flujo()
-
